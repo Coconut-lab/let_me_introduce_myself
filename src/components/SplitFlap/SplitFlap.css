@@ -1,0 +1,200 @@
+.split-flap-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background: white;
+  min-height: 100vh;
+}
+
+.split-flap-display {
+  display: flex;
+  gap: 6px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.split-flap-char {
+  position: relative;
+  width: 60px;
+  height: 90px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  box-shadow: 
+    inset 0 2px 6px rgba(0, 0, 0, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.flap-top,
+.flap-bottom {
+  position: absolute;
+  width: 100%;
+  height: 45px;
+  background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', monospace;
+  font-size: 75px;  /* 50px → 65px로 증가! */
+  font-weight: bold;
+  color: #f0f0f0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.flap-top {
+  top: 0;
+  border-bottom: 2px solid #000;
+  transform-origin: bottom;
+}
+
+.flap-top span {
+  position: absolute;
+  width: 100%;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.flap-bottom {
+  bottom: 0;
+  background: linear-gradient(0deg, #3a3a3a 0%, #1a1a1a 100%);
+  transform-origin: top;
+}
+
+.flap-bottom span {
+  position: absolute;
+  width: 100%;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -45px;
+  left: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.flap-fold {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba(0,0,0,0.8) 0%, 
+    rgba(0,0,0,1) 50%, 
+    rgba(0,0,0,0.8) 100%
+  );
+  transform: translateY(-50%);
+  z-index: 3;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+/* 플리핑 애니메이션 */
+.split-flap-char.flipping .flap-top {
+  animation: flipTop 0.15s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.split-flap-char.flipping .flap-bottom {
+  animation: flipBottom 0.15s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+@keyframes flipTop {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50% {
+    transform: rotateX(-90deg);
+    filter: brightness(0.7);
+  }
+  100% {
+    transform: rotateX(-180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flipBottom {
+  0% {
+    transform: rotateX(180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: rotateX(90deg);
+    filter: brightness(0.7);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+/* 내부 그림자로 깊이감 추가 */
+.split-flap-char::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 상단 하이라이트 */
+.split-flap-char::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 6px 6px 0 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .split-flap-char {
+    width: 40px;
+    height: 65px;
+  }
+
+  .flap-top,
+  .flap-bottom {
+    height: 32.5px;
+    font-size: 45px;
+  }
+  
+  .flap-top span,
+  .flap-bottom span {
+    height: 65px;
+  }
+
+  .flap-bottom span {
+    top: -32.5px;
+  }
+
+  .split-flap-display {
+    gap: 4px;
+    padding: 20px;
+  }
+}
